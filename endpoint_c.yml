@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  title: Ingredients API - Endpoint C
+  version: 1.0.0
+  description: Récupération du stock d'un ingrédient
+paths:
+  /ingredients/{id}/stock:
+    get:
+      summary: Récupère la valeur de stock d'un ingrédient à un moment donné et selon une unité
+      tags:
+        - Ingredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant de l'ingrédient
+          schema:
+            type: integer
+        - name: at
+          in: query
+          required: true
+          description: Moment auquel on veut récupérer la valeur du stock
+          schema:
+            type: string
+            format: date-time
+        - name: unit
+          in: query
+          required: true
+          description: Unité du stock (PCS, KG, L)
+          schema:
+            type: string
+            enum:
+              - PCS
+              - KG
+              - L
+      responses:
+        '200':
+          description: Stock de l'ingrédient trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngredientStock'
+              example:
+                unit: "KG"
+                value: 35.5
+        '400':
+          description: Paramètre at ou unit non fourni
+          content:
+            text/plain:
+              example: "Either mandatory query parameter `at` or `unit` is not provided."
+        '404':
+          description: Ingrédient non trouvé
+          content:
+            text/plain:
+              example: "Ingredient.id=1 is not found"
+components:
+  schemas:
+    IngredientStock:
+      type: object
+      properties:
+        unit:
+          type: string
+          enum:
+            - PCS
+            - KG
+            - L
+        value:
+          type: number

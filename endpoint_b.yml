@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: Ingredients API - Endpoint B
+  version: 1.0.0
+  description: Récupération d'un ingrédient par son identifiant
+paths:
+  /ingredients/{id}:
+    get:
+      summary: Récupère un ingrédient par son identifiant
+      tags:
+        - Ingredients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant de l'ingrédient
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ingrédient trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+              example:
+                id: 1
+                name: "Tomate"
+                category: "Légume"
+                price: 150.0
+        '404':
+          description: Ingrédient non trouvé
+          content:
+            text/plain:
+              example: "Ingredient.id=1 is not found"
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+          format: float
+      required:
+        - name
+        - category
+        - price
